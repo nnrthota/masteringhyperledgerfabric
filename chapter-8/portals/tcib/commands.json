@@ -1,0 +1,144 @@
+//User Register
+
+curl -s -X POST \
+  http://localhost:6000/createUser \
+  -H "content-type: application/json" \
+  -d '{
+  "username":"tcibClient",
+  "orgName":"tcib"
+}'
+
+  -- -- -- -- -- - Channel Creation One Time-- -- -- -- -- -- -
+
+  //Create Cannel financechannel
+curl -s -X POST \
+  http://localhost:6000/createChannel \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"financechannel",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+	"channelConfigPath":"../crypto/financechannel.tx"
+}'
+
+-- -- -- -- -- -- -- --Onboard Peers-- -- -- -- -- -- -- -- --
+//Add tcib Peers to financechannel Channel
+curl -s -X POST \
+  http://localhost:6000/joinPeers \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"financechannel",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+
+
+-- --Install and Instantiate chaincode-- -- - POLICY_CHECK
+
+//Install Chain code on financechannel Channel
+
+curl -s -X POST \
+  http://localhost:6000/installChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "invoice",
+  "chaincodePath": "github.com/invoice/go",
+  "chaincodeType": "golang",
+  "chaincodeVersion": "v0",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+// Instantiate chain code
+curl -s -X POST \
+  http://localhost:6000/instantiateChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "invoice",
+  "chaincodeVersion": "v0",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+  "channelName": "financechannel",
+  "chaincodeType": "golang",
+  "args": [""],
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+-- -- - END Install and Instantiate chaincode END-- -- -
+
+{
+  "invoiceID": "12345",
+  "customersDetails": "khanz suppliers, marhaba suppliers",
+  "issuer":"mint jewlers",
+  "issueDate":"14-04-2020",
+  "invoiceValue": "345655757",
+  "currentState":"Invoice Submitted"
+}
+
+
+//create-invoice
+curl -s -X POST \
+  http://localhost:6000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"financechannel",
+  "chaincodeName":"invoice1",
+  "fcn": "createInvoice",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+  "args": ["{\r\n  \"invoiceID\": \"12345\",\r\n  \"customersDetails\": \"khanz suppliers, marhaba suppliers\",\r\n  \"issuer\":\"mint jewlers\",\r\n  \"issueDate\":\"14-04-2020\",\r\n  \"invoiceValue\": \"345655757\",\r\n  \"currentState\":\"Invoice Submitted\"\r\n}"],
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+{
+  "bidID": "abcde",
+  "invoiceID": "12345",
+  "fee": "5000", 
+  "financier":"TCIB",
+  "advanceAmount":"305566666"
+}
+
+//create-bid
+curl -s -X POST \
+  http://localhost:6000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"financechannel",
+  "chaincodeName":"invoice1",
+  "fcn": "createInvoiceBid",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+  "args": ["{\r\n  \"bidID\": \"abcde\",\r\n  \"invoiceID\": \"12345\",\r\n  \"fee\": \"5000\", \r\n  \"financier\":\"TCIB\",\r\n  \"advanceAmount\":\"305566666\"\r\n}"],
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+//select-bid
+curl -s -X POST \
+  http://localhost:6000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"financechannel",
+  "chaincodeName":"invoice1",
+  "fcn": "selectBid",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+  "args": ["12345", "abcde"],
+	"peers": ["tcib-peer0-tcib"]
+}'
+
+//query
+curl -s -X POST \
+  http://localhost:6000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"financechannel",
+  "chaincodeName":"invoice1",
+  "fcn": "query",
+  "userName": "tcibClient",
+  "orgName": "tcib",
+  "args": ["12345"],
+	"peers": ["tcib-peer0-tcib"]
+}'

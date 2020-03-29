@@ -1,0 +1,16 @@
+{
+   "host":"localhost",
+   "port":"6000",
+   "channelName":"transportchannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"company2admin",
+         "secret":"company2pw"
+      }
+   ],
+   "orgName":"company2",
+   "clientIndy":"company2Client",
+   "peerName":"company2-peer"
+}

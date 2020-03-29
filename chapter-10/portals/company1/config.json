@@ -1,0 +1,14 @@
+{
+   "channelName":"transportchannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"company1admin",
+         "secret":"company1pw"
+      }
+   ],
+   "orgName":"company1",
+   "clientIndy":"company1Client",
+   "peerName":"company1-peer"
+}

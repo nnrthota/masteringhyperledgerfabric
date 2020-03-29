@@ -1,0 +1,16 @@
+{
+   "host":"localhost",
+   "port":"5000",
+   "channelName":"duchannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"duadmin",
+         "secret":"dupw"
+      }
+   ],
+   "orgName":"du",
+   "clientIndy":"duClient",
+   "peerName":"du-peer0-du"
+}

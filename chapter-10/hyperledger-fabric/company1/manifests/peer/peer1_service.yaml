@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: company1-peer
+spec:
+  selector:
+    app: comp1-peer
+    tier: backend
+  ports:
+  - protocol: TCP
+    targetPort: peer1-port
+    port: 30051
+    nodePort: 30051
+    name: peer1-port
+  - protocol: TCP
+    targetPort: peer1-event
+    port: 30053
+    nodePort: 30053
+    name: peer1-event
+  type: NodePort

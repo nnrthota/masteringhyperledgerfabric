@@ -1,0 +1,47 @@
+#
+# Banca Sella Group
+#
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: finance.com
+
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: ordererorg-orderer-ordererorg
+      - SANS:
+         - localhost
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: opendata
+    Domain: opendata
+    Template:
+      Count: 1
+      SANS:
+      - localhost
+      - opendata-peer0-opendata
+    Users:
+      Count: 1
+
+  - Name: tcib
+    Domain: tcib
+    Template:
+      Count: 1
+      SANS:
+      - localhost
+      - tcib-peer0-tcib
+    Users:
+      Count: 1

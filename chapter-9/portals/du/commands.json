@@ -1,0 +1,142 @@
+//User Register
+
+curl -s -X POST \
+  http://localhost:7000/createUser \
+  -H "content-type: application/json" \
+  -d '{
+  "username":"duClient",
+  "orgName":"du"
+}'
+
+  -- -- -- -- -- - Channel Creation One Time-- -- -- -- -- -- -
+
+  //Create Cannel netchannel
+curl -s -X POST \
+  http://localhost:7000/createChannel \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"netchannel",
+  "userName": "duClient",
+  "orgName": "du",
+	"channelConfigPath":"../crypto/netchannel.tx"
+}'
+
+-- -- -- -- -- -- -- --Onboard Peers-- -- -- -- -- -- -- -- --
+//Add du Peers to netchannel Channel
+curl -s -X POST \
+  http://localhost:7000/joinPeers \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"netchannel",
+  "userName": "duClient",
+  "orgName": "du",
+	"peers": ["du-peer"]
+}'
+
+
+
+-- --Install and Instantiate chaincode-- -- - POLICY_CHECK
+
+//Install Chain code on netchannel Channel
+
+curl -s -X POST \
+  http://localhost:7000/installChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "csp",
+  "chaincodePath": "github.com/csp/go",
+  "chaincodeType": "golang",
+  "chaincodeVersion": "v0",
+  "userName": "duClient",
+  "orgName": "du",
+	"peers": ["du-peer"]
+}'
+
+// Instantiate chain code
+curl -s -X POST \
+  http://localhost:7000/instantiateChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "csp",
+  "chaincodeVersion": "v0",
+  "userName": "duClient",
+  "orgName": "du",
+  "channelName": "netchannel",
+  "chaincodeType": "golang",
+  "args": [""],
+	"peers": ["du-peer"]
+}'
+
+-- -- - END Install and Instantiate chaincode END-- -- -
+
+{
+  "msisdn": "8848284834",
+  "address": "Some where in the Andhra Pradesh, some PIN code",
+  "atHome": true,
+  "status":"in-force",
+  "Location": "Kadapa, Andhrapradesh",
+  "latitude":"86245826",
+  "longitude": "24756247",
+  "isRoaming":false,
+  "HomeOperatorName":"du",
+  "HomeOperatorRegion":"Andhra Pradesh & Telangana",
+  "RoamingOperatorName":"",
+  "RoamingOperatorRegion":""
+}
+
+
+//create-Subscriber
+curl -s -X POST \
+  http://localhost:7000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "createSubscriber",
+  "userName": "duClient",
+  "orgName": "du",
+  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Kadapa, Andhrapradesh\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"du\",\r\n  \"HomeOperatorRegion\":\"Andhra Pradesh & Telangana\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
+	"peers": ["du-peer"]
+}'
+
+//change to roaming
+curl -s -X POST \
+  http://localhost:7000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "toRoaming",
+  "userName": "duClient",
+  "orgName": "du",
+  "args": ["8848284834", "du", "UAE"],
+	"peers": ["du-peer"]
+}'
+
+//authenticate
+curl -s -X POST \
+  http://localhost:7000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "authenticate",
+  "userName": "duClient",
+  "orgName": "du",
+  "args": ["8848284834", "UAE"],
+	"peers": ["du-peer"]
+}'
+
+//query
+curl -s -X POST \
+  http://localhost:7000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "query",
+  "userName": "duClient",
+  "orgName": "du",
+  "args": ["8848284834"],
+	"peers": ["du-peer"]
+}'

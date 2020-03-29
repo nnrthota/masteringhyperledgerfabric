@@ -1,0 +1,131 @@
+name: Fabric
+version: "1.0"
+mutual-tls: false
+
+caliper:
+    blockchain: fabric
+    command:
+        start: sleep 3s
+        end: sleep 3s
+
+info:
+    Version: 1.0
+    Size: 1 Org with 2 Peers
+    Orderer: Raft
+    Distribution: Single Host
+    StateDB: CouchDB
+
+clients:
+    client0.default:
+        client:
+            organization: default
+            credentialStore:
+                path: /tmp/hfc-kvs/org1
+                cryptoStore:
+                    path: /tmp/hfc-cvs/org1
+            clientPrivateKey:
+                path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/users/User1@default/msp/keystore/ad9b7f044971dd454ad3e799a5a0669083229fd72bf9dc3913a808710dba9458_sk
+            clientSignedCert:
+                path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/users/User1@default/msp/signcerts/User1@default-cert.pem
+
+
+channels:
+    defaultchannel:
+        created: false
+        configBinary: defaultconsortium/artifacts/defaultchannel.tx
+        orderers:
+        - default-orderer1
+        - default-orderer2
+        - default-orderer3
+        peers:
+            default-peer1-default:
+                eventSource: true
+            default-peer2-default:
+                eventSource: true
+        chaincodes:
+        - id: rate
+          version: v0
+          language: golang
+          path: chaincode/rate
+          endorsement-policy:
+            identities:
+            - role:
+                name: member
+                mspId: defaultMSP
+            policy:
+              1-of:
+              - signed-by: 0
+
+organizations:
+    default:
+      mspid: defaultMSP
+      peers:
+      - default-peer1-default
+      - default-peer2-default
+      certificateAuthorities:
+      - ca-default
+      adminPrivateKey:
+          path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/users/Admin@default/msp/keystore/31e43baedca2f39b7917b8f2db52f2e33f49f3630ffee671256f13f45a800d78_sk
+      signedCert:
+          path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/users/Admin@default/msp/signcerts/Admin@default-cert.pem
+
+
+orderers:
+  default-orderer1:
+    url: grpcs://localhost:7050
+    grpcOptions:
+      ssl-target-name-override: default-orderer1
+      grpc-max-send-message-length: 15
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/peers/peer0.default/tls/ca.crt
+  default-orderer2:
+    url: grpcs://localhost:8050
+    grpcOptions:
+      ssl-target-name-override: default-orderer2
+      grpc-max-send-message-length: 15
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/peers/peer3.default/tls/ca.crt
+  default-orderer3:
+    url: grpcs://localhost:9050
+    grpcOptions:
+      ssl-target-name-override: default-orderer3
+      grpc-max-send-message-length: 15
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/peers/peer4.default/tls/ca.crt
+
+
+peers:
+  default-peer1-default:
+    url: grpcs://localhost:7051
+    grpcOptions:
+      ssl-target-name-override: default-peer1-default
+      grpc-max-send-message-length: -1
+      grpc.keepalive_time_ms: 600000
+      grpc.http2.min_time_between_pings_ms: 120000
+      grpc.http2.max_pings_without_data: 0
+      grpc.keepalive_permit_without_calls: 1
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/peers/peer1.default/tls/ca.crt
+  default-peer2-default:
+    url: grpcs://localhost:8051
+    grpcOptions:
+      ssl-target-name-override: default-peer2-default
+      grpc-max-send-message-length: -1
+      grpc.keepalive_time_ms: 600000
+      grpc.http2.min_time_between_pings_ms: 120000
+      grpc.http2.max_pings_without_data: 0
+      grpc.keepalive_permit_without_calls: 1 
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/peers/peer2.default/tls/ca.crt
+
+
+certificateAuthorities:
+  ca-default:
+    url: https://localhost:7054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: defaultconsortium/artifacts/crypto-config/peerOrganizations/default/ca/ca.default-cert.pem
+    registrar:
+    - enrollId: defaultadmin
+      enrollSecret: defaultpw

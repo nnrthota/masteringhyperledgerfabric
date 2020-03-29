@@ -1,0 +1,1 @@
+Note: Deploy first kafka then organizations

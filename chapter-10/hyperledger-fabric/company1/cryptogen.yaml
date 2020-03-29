@@ -1,0 +1,21 @@
+PeerOrgs:
+  - Name: company1
+    Domain: company1
+    Template:
+      Count: 4
+      SANS:
+      - company1-peer
+      - orderer1
+      - orderer2
+      - orderer3
+    Users:
+      Count: 1
+
+  - Name: company2
+    Domain: company2
+    Template:
+      Count: 1
+      SANS:
+      - company2-peer
+    Users:
+      Count: 1

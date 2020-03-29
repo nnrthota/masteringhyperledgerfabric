@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  logspout:
+    image: narendranathreddy/logspout
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      ROUTE_URIS: logstash://logstash:9500
+      LOGSTASH_TAGS: docker-elk
+    networks:
+      - elk
+    restart: on-failure
+
+networks:
+  elk:
+    driver: overlay

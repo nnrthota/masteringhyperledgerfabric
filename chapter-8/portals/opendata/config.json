@@ -1,0 +1,16 @@
+{
+   "host":"localhost",
+   "port":"5000",
+   "channelName":"opendatachannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"opendataadmin",
+         "secret":"opendatapw"
+      }
+   ],
+   "orgName":"opendata",
+   "clientIndy":"opendataClient",
+   "peerName":"opendata-peer0-opendata"
+}

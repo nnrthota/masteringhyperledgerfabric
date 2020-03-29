@@ -1,0 +1,171 @@
+version: '3'
+
+networks:
+  cspnet:
+    external: true
+
+services:
+  zookeeper0:
+    image: hyperledger/fabric-zookeeper:0.4.18
+    environment:
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+      - ZOO_MY_ID=1
+    restart: always
+    hostname: zookeeper0
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    deploy:
+      # placement:
+      #    constraints: [node.hostname==ip-10-0-0-14]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet
+
+  zookeeper1:
+    image: hyperledger/fabric-zookeeper:0.4.18
+    environment:
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+      - ZOO_MY_ID=2
+    restart: always
+    hostname: zookeeper1
+    ports:
+      - 12181:2181
+      - 12888:2888
+      - 13888:3888
+    deploy:
+      # placement:
+      #   constraints: [node.hostname==ip-10-0-0-14]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet
+
+  zookeeper2:
+    image: hyperledger/fabric-zookeeper:0.4.18
+    environment:
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+      - ZOO_MY_ID=3
+    restart: always
+    hostname: zookeeper2
+    ports:
+      - 22181:2181
+      - 22888:2888
+      - 23888:3888
+    deploy:
+      # placement:
+      #   constraints: [node.hostname==ip-10-0-0-14]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet
+
+  kafka0:
+    image: hyperledger/fabric-kafka:0.4.18
+    restart: always
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ADVERTISED_HOST_NAME=kafka0
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka0:9092
+    ports:
+      - 9092:9092
+      - 9093:9093
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    hostname: kafka0
+    deploy:
+      # placement:
+      #   constraints: [node.hostname==devserver]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet
+
+  kafka1:
+    image: hyperledger/fabric-kafka:0.4.18
+    restart: always
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ADVERTISED_HOST_NAME=kafka1
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092
+    ports:
+      - 10092:9092
+      - 10093:9093
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    hostname: kafka1
+    deploy:
+      # placement:
+      #   constraints: [node.hostname==devserver]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet
+
+  kafka2:
+    image: hyperledger/fabric-kafka:0.4.18
+    restart: always
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024 # 99 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ADVERTISED_HOST_NAME=kafka2
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9092
+    ports:
+      - 11092:9092
+      - 11093:9093
+    hostname: kafka2
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+    deploy:
+      # placement:
+      #   constraints: [node.hostname==devserver]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - cspnet

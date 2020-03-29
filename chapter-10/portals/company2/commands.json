@@ -1,0 +1,140 @@
+//User Register
+
+curl -s -X POST \
+  http://localhost:6000/createUser \
+  -H "content-type: application/json" \
+  -d '{
+  "username":"company2Client",
+  "orgName":"company2"
+}'
+
+  -- -- -- -- -- - Channel Creation One Time-- -- -- -- -- -- -
+
+  //Create Cannel transportchannel
+curl -s -X POST \
+  http://localhost:6000/createChannel \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"transportchannel",
+  "userName": "company2Client",
+  "orgName": "company2",
+	"channelConfigPath":"../crypto/transportchannel.tx"
+}'
+
+-- -- -- -- -- -- -- --Onboard Peers-- -- -- -- -- -- -- -- --
+//Add company2 Peers to transportchannel Channel
+curl -s -X POST \
+  http://localhost:6000/joinPeers \
+  -H "content-type: application/json" \
+  -d '{
+	"channelName":"transportchannel",
+  "userName": "company2Client",
+  "orgName": "company2",
+	"peers": ["company2-peer"]
+}'
+
+
+
+-- --Install and Instantiate chaincode-- -- - shipment
+
+//Install Chain code on transportchannel Channel
+
+curl -s -X POST \
+  http://localhost:6000/installChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "shipment",
+  "chaincodePath": "github.com/shipment/go",
+  "chaincodeType": "golang",
+  "chaincodeVersion": "v0",
+  "userName": "company2Client",
+  "orgName": "company2",
+	"peers": ["company2-peer"]
+}'
+
+// Instantiate chain code
+curl -s -X POST \
+  http://localhost:6000/instantiateChaincode \
+  -H "content-type: application/json" \
+  -d '{
+  "chaincodeName": "shipment",
+  "chaincodeVersion": "v0",
+  "userName": "company2Client",
+  "orgName": "company2",
+  "channelName": "transportchannel",
+  "chaincodeType": "golang",
+  "args": [""],
+	"peers": ["company2-peer"]
+}'
+
+-- -- - END Install and Instantiate chaincode END-- -- -
+
+{
+  "shipmentID": "1245343636",
+  "deliveryCountry": "Spain",
+  "sourceCountry": "India",
+  "shipmentWeight":"10,000kg",
+  "deliveryLocation": "Spain, Madrid, sol",
+  "sourceLocation":"India, Hyderabad, HitechCity",
+  "clearenceStatus":"PENDING",
+  "shipmentRange": "Origin",
+  "status":"CREATED",
+  "location":"India",
+  "latitude":"24524624426",
+  "longitude":"245245425"
+}
+//create-shipment
+curl -s -X POST \
+  http://localhost:6000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"transportchannel",
+  "chaincodeName":"shipment",
+  "fcn": "createShipment",
+  "userName": "company2Client",
+  "orgName": "company2",
+  "args": ["{\n  \"shipmentID\": \"1245343636\",\n  \"deliveryCountry\": \"Spain\",\n  \"sourceCountry\": \"India\",\n  \"shipmentWeight\":\"10,000kg\",\n  \"deliveryLocation\": \"Spain, Madrid, sol\",\n  \"sourceLocation\":\"India, Hyderabad, HitechCity\",\n  \"clearenceStatus\":\"PENDING\",\n  \"shipmentRange\": \"Origin\",\n  \"status\":\"CREATED\",\n  \"location\":\"India\",\n  \"latitude\":\"24524624426\",\n  \"longitude\":\"245245425\"\n}"],
+	"peers": ["company2-peer"]
+}'
+
+{
+  "shipmentID": "1245343636",
+  "deliveryCountry": "Spain",
+  "sourceCountry": "India",
+  "shipmentWeight":"10,000kg",
+  "deliveryLocation": "Spain, Madrid, sol",
+  "sourceLocation":"India, Hyderabad, HitechCity",
+  "clearenceStatus":"PENDING",
+  "shipmentRange": "Crossed Indian Waters",
+  "status":"SHIPPED",
+  "location":"Dubai",
+  "latitude":"24524624426",
+  "longitude":"245245425"
+}
+//update-shipment
+curl -s -X POST \
+  http://localhost:6000/invoke \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"transportchannel",
+  "chaincodeName":"shipment",
+  "fcn": "update",
+  "userName": "company2Client",
+  "orgName": "company2",
+  "args": ["{\n  \"shipmentID\": \"1245343636\",\n  \"deliveryCountry\": \"Spain\",\n  \"sourceCountry\": \"India\",\n  \"shipmentWeight\":\"10,000kg\",\n  \"deliveryLocation\": \"Spain, Madrid, sol\",\n  \"sourceLocation\":\"India, Hyderabad, HitechCity\",\n  \"clearenceStatus\":\"PENDING\",\n  \"shipmentRange\": \"Crossed Indian Waters\",\n  \"status\":\"SHIPPED\",\n  \"location\":\"Dubai\",\n  \"latitude\":\"24524624426\",\n  \"longitude\":\"245245425\"\n}"],
+	"peers": ["company2-peer"]
+}'
+
+//query
+curl -s -X POST \
+  http://localhost:6000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"transportchannel",
+  "chaincodeName":"shipment",
+  "fcn": "query",
+  "userName": "company2Client",
+  "orgName": "company2",
+  "args": ["1245343636"],
+	"peers": ["company2-peer"]
+}'

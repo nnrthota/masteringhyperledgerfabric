@@ -1,0 +1,16 @@
+{
+   "host":"localhost",
+   "port":"6000",
+   "channelName":"financechannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"airteladmin",
+         "secret":"airtelpw"
+      }
+   ],
+   "orgName":"airtel",
+   "clientIndy":"airtelClient",
+   "peerName":"airtel-peer0-airtel"
+}

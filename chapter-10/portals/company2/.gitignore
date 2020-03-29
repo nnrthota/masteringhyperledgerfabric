@@ -1,0 +1,4 @@
+node_modules
+package-lock.json
+.BS_STORE
+fabric-client-kv-servicepr

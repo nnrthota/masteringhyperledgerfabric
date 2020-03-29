@@ -1,0 +1,22 @@
+PeerOrgs:
+  - Name: du
+    Domain: du
+    Template:
+      Count: 2
+      SANS:
+      - localhost
+      - du-peer
+      - du-orderer
+    Users:
+      Count: 1
+
+  - Name: airtel
+    Domain: airtel
+    Template:
+      Count: 2
+      SANS:
+      - localhost
+      - airtel-peer
+      - airtel-orderer
+    Users:
+      Count: 1

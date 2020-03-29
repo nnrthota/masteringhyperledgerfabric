@@ -1,0 +1,141 @@
+
+
+Organizations:
+
+    - &OrdererOrg
+
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: crypto-config/ordererOrganizations/finance.com/msp
+
+    - &opendata
+        Name: opendata
+        ID: opendataMSP
+        MSPDir: crypto-config/peerOrganizations/opendata/msp
+        AnchorPeers:
+            - Host: opendata-peer0-opendata
+              Port: 7051
+
+    - &tcib
+        Name: tcib
+        ID: tcibMSP
+        MSPDir: crypto-config/peerOrganizations/tcib/msp
+        AnchorPeers:
+            - Host: tcib-peer0-tcib
+              Port: 7051
+
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V1_3: true
+    Orderer: &OrdererCapabilities
+        V1_1: true
+    Application: &ApplicationCapabilities
+        V1_3: true
+        V1_2: false
+        V1_1: false
+
+################################################################################
+#
+#   SECTION: Application
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters
+#
+################################################################################
+Application: &ApplicationDefaults
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the application side of the network
+    Organizations:
+
+
+################################################################################
+#
+#   SECTION: Orderer
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for orderer related parameters
+#
+################################################################################
+Orderer: &OrdererDefaults
+
+    # Orderer Type: The orderer implementation to start
+    # Available types are "solo" and "kafka"
+    OrdererType: solo
+
+    Addresses:
+        - ordererorg-orderer-ordererorg:7050
+
+    # Batch Timeout: The amount of time to wait before creating a batch
+    BatchTimeout: 2s
+
+    # Batch Size: Controls the number of messages batched into a block
+    BatchSize:
+
+        # Max Message Count: The maximum number of messages to permit in a batch
+        MaxMessageCount: 40
+
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch.
+        AbsoluteMaxBytes: 98 MB
+
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the preferred
+        # max bytes will result in a batch larger than preferred max bytes.
+        PreferredMaxBytes: 4354 KB
+
+    Kafka:
+        # Brokers: A list of Kafka brokers to which the orderer connects
+        # NOTE: Use IP:port notation
+        Brokers:
+            - 127.0.0.1:9092
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the orderer side of the network
+    Organizations:
+
+
+
+
+################################################################################
+#
+#   Profile
+#
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+Profiles:
+
+    financeGroupOrdererGenesis:
+        Capabilities:
+          <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+              <<: *OrdererCapabilities
+        Consortiums:
+            financeConsortium:
+                Organizations:
+                    - *opendata
+                    - *tcib
+
+
+    opendataChannel:
+        Consortium: financeConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *opendata
+                - *tcib
+            Capabilities:
+              <<: *ApplicationCapabilities
+
+
+

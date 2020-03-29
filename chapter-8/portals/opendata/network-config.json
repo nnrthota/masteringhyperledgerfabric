@@ -1,0 +1,90 @@
+{
+	"name": "finance-opendata",
+	"x-type": "hlfv1",
+	"description": "finance-opendata-admin-portal",
+	"version": "1.0",
+	"channels": {
+		"financechannel": {
+			"orderers": [
+				"ordererorg-orderer-ordererorg"
+			],
+			"peers": {
+				"opendata-peer0-opendata": {
+					"endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+					"eventSource": true
+				}
+			},
+			"chaincodes": [
+				"mycc:v0"
+			]
+		}
+	},
+	"organizations": {
+		"opendata": {
+			"mspid": "opendataMSP",
+			"peers": [
+				"opendata-peer0-opendata"
+			],
+			"certificateAuthorities": [
+				"ca-opendata"
+			],
+			"adminPrivateKey": {
+				"path": "crypto/crypto-config/peerOrganizations/opendata/users/Admin@opendata/msp/keystore/d30f010bdb8387dc31d35ad339901a04ab7512180ca17850f4999987cbe37c31_sk"
+			},
+			"signedCert": {
+				"path": "crypto/crypto-config/peerOrganizations/opendata/users/Admin@opendata/msp/signcerts/Admin@opendata-cert.pem"
+			}
+		}
+	},
+	"orderers": {
+		"ordererorg-orderer-ordererorg": {
+			"url": "grpcs://localhost:7050",
+			"grpcOptions": {
+				"ssl-target-name-override": "ordererorg-orderer-ordererorg",
+				"grpc.max_receive_message_length": -1,
+				"grpc.max_send_message_length": -1,
+				"grpc.keepalive_time_ms": 600000, 
+				"grpc.http2.min_time_between_pings_ms": 120000, 
+				"grpc.keepalive_timeout_ms": 20000, 
+				"grpc.http2.max_pings_without_data": 0, 
+				"grpc.keepalive_permit_without_calls": 1
+			},
+			"tlsCACerts": {
+				"path": "crypto/crypto-config/ordererOrganizations/finance.com/orderers/ordererorg-orderer-ordererorg.finance.com/tls/ca.crt"
+			}
+		}
+	},
+	"peers": {
+		"opendata-peer0-opendata": {
+			"url": "grpcs://localhost:8051",
+			"eventUrl": "grpcs://localhost:8053",
+			"grpcOptions": {
+				"ssl-target-name-override": "opendata-peer0-opendata",
+				"grpc.max_receive_message_length": -1,
+				"grpc.max_send_message_length": -1,
+				"grpc.keepalive_time_ms": 600000, 
+				"grpc.http2.min_time_between_pings_ms": 120000, 
+				"grpc.keepalive_timeout_ms": 20000, 
+				"grpc.http2.max_pings_without_data": 0, 
+				"grpc.keepalive_permit_without_calls": 1
+			},
+			"tlsCACerts": {
+				"path": "crypto/crypto-config/peerOrganizations/opendata/peers/peer0.opendata/tls/ca.crt"
+			}
+		}
+	},
+	"certificateAuthorities": {
+		"ca-opendata": {
+			"url": "https://localhost:8054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "crypto/crypto-config/peerOrganizations/opendata/ca/ca.opendata-cert.pem"
+			},
+			"caName": "ca-opendata"
+		}
+	}
+}

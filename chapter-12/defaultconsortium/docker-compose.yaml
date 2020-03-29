@@ -1,0 +1,329 @@
+version: '3'
+
+networks:
+  defaultnet:
+    external: true
+volumes:
+  backup_ca:
+  backup_peer1:
+  backup_peer2:
+  backup_orderer1:
+  backup_orderer2:
+  backup_orderer3:
+
+services:
+
+  ca_default:
+    hostname: ca.default
+    image: hyperledger/fabric-ca:1.4.6
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-default
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.default-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/6c73a50f81afdef99d539faf08fadc60243d5702333e8f3a575c5d8fbcdfac21_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.default-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/6c73a50f81afdef99d539faf08fadc60243d5702333e8f3a575c5d8fbcdfac21_sk
+    ports:
+      - "7054:7054"
+    command: sh -c ' fabric-ca-server start -b defaultadmin:defaultpw -d'
+    volumes:
+      - backup_ca:/etc/hyperledger
+      - ./artifacts/crypto-config/peerOrganizations/default/ca/:/etc/hyperledger/fabric-ca-server-config
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  default-orderer1:
+    hostname: default-orderer1
+    image: hyperledger/fabric-orderer:1.4.6
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=defaultMSP
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:9444
+      - ORDERER_METRICS_PROVIDER=prometheus
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    command: orderer
+    ports:
+      - 7050:7050
+      - 9444:9444
+    volumes:
+        - backup_orderer1:/var/hyperledger/production/orderer
+        - ./artifacts:/etc/hyperledger/configtx
+        - ./artifacts/crypto-config/peerOrganizations/default/peers/peer0.default/:/etc/hyperledger/crypto/orderer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  default-orderer2:
+    hostname: default-orderer2
+    image: hyperledger/fabric-orderer:1.4.6
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=defaultMSP
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:9445
+      - ORDERER_METRICS_PROVIDER=prometheus
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    command: orderer
+    ports:
+      - 8050:7050
+      - 9445:9445
+    volumes:
+        - backup_orderer2:/var/hyperledger/production/orderer
+        - ./artifacts:/etc/hyperledger/configtx
+        - ./artifacts/crypto-config/peerOrganizations/default/peers/peer3.default/:/etc/hyperledger/crypto/orderer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  default-orderer3:
+    hostname: default-orderer3
+    image: hyperledger/fabric-orderer:1.4.6
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=defaultMSP
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:9446
+      - ORDERER_METRICS_PROVIDER=prometheus
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    command: orderer
+    ports:
+      - 9050:7050
+      - 9446:9446
+    volumes:
+        - backup_orderer3:/var/hyperledger/production/orderer
+        - ./artifacts:/etc/hyperledger/configtx
+        - ./artifacts/crypto-config/peerOrganizations/default/peers/peer4.default/:/etc/hyperledger/crypto/orderer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  couchdb0:
+    container_name: couchdb0
+    image: hyperledger/fabric-couchdb:0.4.18
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - "5984:5984"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 15
+    networks:
+    - defaultnet
+
+  default-peer1-default:
+    hostname: default-peer1-default
+    image: hyperledger/fabric-peer:1.4.6
+    environment:
+      - PEER_HOST=default-peer1-default
+      - PEER_NAME=default-peer1-default
+      - CORE_PEER_ID=default-peer1-default
+      - CORE_PEER_LOCALMSPID=defaultMSP
+      - CORE_PEER_ADDRESS=default-peer1-default:7051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=defaultnet
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=default-peer1-default:7051
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      #Operations
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:8444
+      - CORE_METRICS_PROVIDER=prometheus
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/crypto/peer/msp
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
+      # -- About Couch --
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 7051:7051
+      - 7053:7053
+      - 8444:8444
+    volumes:
+        - backup_peer1:/var/hyperledger/production
+        - /var/run/:/host/var/run/
+        - ./artifacts/crypto-config/peerOrganizations/default/peers/peer1.default/:/etc/hyperledger/crypto/peer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  couchdb1:
+    container_name: couchdb1
+    image: hyperledger/fabric-couchdb:0.4.18
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - "6984:5984"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 15
+    networks:
+    - defaultnet
+
+  default-peer2-default:
+    hostname: default-peer2-default
+    image: hyperledger/fabric-peer:1.4.6
+    environment:
+      - PEER_HOST=default-peer2-default
+      - PEER_NAME=default-peer2-default
+      - CORE_PEER_ID=default-peer2-default
+      - CORE_PEER_LOCALMSPID=defaultMSP
+      - CORE_PEER_ADDRESS=default-peer2-default:7051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=defaultnet
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=default-peer2-default:7051
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      #Operations
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:8445
+      - CORE_METRICS_PROVIDER=prometheus
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/crypto/peer/msp
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
+      # -- About Couch --
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 8051:7051
+      - 8053:7053
+      - 8445:8445
+    volumes:
+        - backup_peer2:/var/hyperledger/production
+        - /var/run/:/host/var/run/
+        - ./artifacts/crypto-config/peerOrganizations/default/peers/peer2.default/:/etc/hyperledger/crypto/peer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./artifacts/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+
+  grafana:
+    image: grafana/grafana
+    ports:
+    - 3000:3000
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+      - defaultnet
+

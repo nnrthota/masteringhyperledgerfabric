@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ca-comp1-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ca-company1
+  template:
+    metadata:
+      labels:
+       app: ca-company1
+       tier: identity
+    spec:
+     containers:
+       - name: ca
+         image: hyperledger/fabric-ca:1.4.6
+         env: 
+         - name:  FABRIC_CA_HOME
+           value: /etc/hyperledger/fabric-ca-server
+         - name:  FABRIC_CA_SERVER_CA_NAME
+           value: ca-company1
+         - name:  FABRIC_CA_SERVER_TLS_ENABLED
+           value: "true"
+         - name:  FABRIC_CA_SERVER_CA_CERTFILE
+           value: /etc/hyperledger/fabric-ca-server-config/ca.company1-cert.pem
+         - name:  FABRIC_CA_SERVER_CA_KEYFILE
+           value: /etc/hyperledger/fabric-ca-server-config/cc459d7cf9730213e2046d2058bd07989d8c2bdfdb9ed8b0bcf8a0b9bd6ca00c_sk
+         - name:  FABRIC_CA_SERVER_CA_CERTFILE
+           value: /etc/hyperledger/fabric-ca-server-config/ca.company1-cert.pem
+         - name:  FABRIC_CA_SERVER_CA_KEYFILE
+           value: /etc/hyperledger/fabric-ca-server-config/cc459d7cf9730213e2046d2058bd07989d8c2bdfdb9ed8b0bcf8a0b9bd6ca00c_sk
+         ports:
+          - containerPort: 7054
+         command: ["sh"]
+         args:  ["-c", "fabric-ca-server start -b company1admin:company1pw -d"]
+         volumeMounts:
+          - mountPath: "/etc/hyperledger/fabric-ca-server-config/"
+            name: ca-volume
+            readOnly: true
+     volumes:
+       - name: ca-volume
+         secret:
+             secretName: company1-ca 

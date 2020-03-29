@@ -1,0 +1,16 @@
+{
+   "host":"localhost",
+   "port":"6000",
+   "channelName":"financechannel",
+   "CC_SRC_PATH":"../chaincode",
+   "chaincodeName":"policy",
+   "admins":[
+      {
+         "username":"tcibadmin",
+         "secret":"tcibpw"
+      }
+   ],
+   "orgName":"tcib",
+   "clientIndy":"tcibClient",
+   "peerName":"tcib-peer0-tcib"
+}

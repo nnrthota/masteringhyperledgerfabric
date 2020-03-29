@@ -1,0 +1,137 @@
+version: '3'
+
+networks:
+  cspnet:
+    external: true
+
+services:
+
+  ca_du:
+    hostname: ca.du
+    image: hyperledger/fabric-ca:1.4.6
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-du
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.du-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/3d9b305ae5063c688810c33669b3a00f54d8d422d876351d8632093f55ecacef_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.du-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/3d9b305ae5063c688810c33669b3a00f54d8d422d876351d8632093f55ecacef_sk
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start -b duadmin:dupw -d'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    volumes:
+      - ./artifacts/crypto-config/peerOrganizations/du/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - cspnet
+
+
+  du-orderer:
+    hostname: du-orderer
+    image: hyperledger/fabric-orderer:1.4.6
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=duMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/crypto/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    command: orderer
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    ports:
+      - 8050:7050
+    volumes:
+        - ./artifacts:/etc/hyperledger/configtx
+        - ./artifacts/crypto-config/peerOrganizations/du/peers/peer1.du:/etc/hyperledger/crypto/orderer
+    networks:
+      - cspnet
+
+  couchdb2:
+    container_name: couchdb2
+    image: hyperledger/fabric-couchdb:0.4.18
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for sella map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "6984:5984"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    networks:
+    - cspnet
+
+  du-peer:
+    hostname: du-peer
+    image: hyperledger/fabric-peer:1.4.6
+    environment:
+      - PEER_HOST=du-peer
+      - PEER_NAME=du-peer
+      - CORE_PEER_ID=du-peer
+      - CORE_PEER_LOCALMSPID=duMSP
+      - CORE_PEER_ADDRESS=du-peer:7051
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=cspnet
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=du-peer:7051
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/crypto/peer/msp
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
+      # -- About Couch --
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 8051:7051
+      - 8053:7053
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 15
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./artifacts/crypto-config/peerOrganizations/du/peers/peer0.du/:/etc/hyperledger/crypto/peer
+    depends_on:
+      - couchdb2
+    networks:
+      - cspnet

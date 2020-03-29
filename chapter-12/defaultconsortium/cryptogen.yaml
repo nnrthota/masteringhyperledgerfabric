@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # default
+  # ---------------------------------------------------------------------------
+  - Name: default
+    Domain: default
+    Template:
+      Count: 7
+      SANS:
+      - localhost
+      - default-peer1-default
+      - default-peer2-default
+      - default-orderer1
+      - default-orderer2
+      - default-orderer3
+    Users:
+      Count: 1
+
