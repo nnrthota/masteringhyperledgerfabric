@@ -95,11 +95,11 @@ curl -s -X POST \
   "fcn": "createSubscriber",
   "userName": "airtelClient",
   "orgName": "airtel",
-  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Kadapa, Andhrapradesh\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"airtel\",\r\n  \"HomeOperatorRegion\":\"Andhra Pradesh & Telangana\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
+  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"IN\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"airtel\",\r\n  \"HomeOperatorRegion\":\"Andhra Pradesh & Telangana\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
 	"peers": ["airtel-peer"]
 }'
 
-//change to roaming
+//change to roaming: Move user to UAE location
 curl -s -X POST \
   http://localhost:6000/invoke \
   -H "content-type: application/json" \
@@ -113,7 +113,23 @@ curl -s -X POST \
 	"peers": ["airtel-peer"]
 }'
 
-//authenticate
+//authenticate : This should give result as UNAuthorized as user is in roaming and 
+// Fraud cloned the user identity and connected to IN to avail services 
+// Blockchain detected this behavioud instantly and mitigate the fraud!
+curl -s -X POST \
+  http://localhost:6000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "authenticate",
+  "userName": "airtelClient",
+  "orgName": "airtel",
+  "args": ["8848284834", "IN"],
+	"peers": ["airtel-peer"]
+}'
+
+//authenticate should give result as Authorized
 curl -s -X POST \
   http://localhost:6000/query \
   -H "content-type: application/json" \

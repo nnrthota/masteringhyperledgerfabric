@@ -152,6 +152,12 @@ func (s *SmartContract) authenticate(APIstub shim.ChaincodeStubInterface, args [
 		return shim.Error("This subscriber does not exists")
 	}
 	data := Subscriber{}
+	
+	if err := json.Unmarshal(dataAsBytes, &data); err != nil {
+		str := fmt.Sprintf("JSON Parsing exception: %+v", err)
+		return shim.Error(str)
+	}
+
 	if data.HomeOperatorRegion == args[1] {
 		if data.AtHome == false && data.IsRoaming == true {
 			return shim.Success([]byte("UnAuthorized!!"))
@@ -162,11 +168,6 @@ func (s *SmartContract) authenticate(APIstub shim.ChaincodeStubInterface, args [
 			return shim.Success([]byte("Authorized!!"))
 		}
 		return shim.Success([]byte("UnAuthorized"))
-	}
-
-	if err := json.Unmarshal(dataAsBytes, &data); err != nil {
-		str := fmt.Sprintf("JSON Parsing exception: %+v", err)
-		return shim.Error(str)
 	}
 
 	fmt.Println(fmt.Sprintf("Sucessfully authenticated %s", dataAsBytes))

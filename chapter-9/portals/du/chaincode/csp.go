@@ -132,7 +132,7 @@ func (s *SmartContract) createSubscriber(APIstub shim.ChaincodeStubInterface, ar
 		str := fmt.Sprintf("Problem occured while saving the information")
 		return shim.Error(str)
 	}
-	fmt.Println(fmt.Sprintf("Sucessfully tested %s", dataAsBytes))
+	fmt.Println(fmt.Sprintf("Sucessfully created %s", dataAsBytes))
 	return shim.Success(dataAsBytes)
 }
 
@@ -147,31 +147,30 @@ func (s *SmartContract) authenticate(APIstub shim.ChaincodeStubInterface, args [
 	dataAsBytes, err := APIstub.GetState(args[0])
 	if err != nil {
 		return shim.Error("Failed to get subscriber: " + err.Error())
-	} else if dataAsBytes != nil {
+	} else if dataAsBytes == nil {
 		fmt.Println("This subscriber does not exists")
 		return shim.Error("This subscriber does not exists")
 	}
 	data := Subscriber{}
-	if data.HomeOperatorRegion == args[1] {
-		if data.AtHome = false && data.IsRoaming = true {
-			return shim.Success([]byte("UnAuthorized!!"))
-		} else {
-			return shim.Success([]byte("Authorized"))
-		}
-	} else {
-		if data.AtHome = false && data.IsRoaming = true {
-			return shim.Success([]byte("Authorized!!"))
-		} else {
-			return shim.Success([]byte("UnAuthorized"))
-		}
-	}
 
 	if err := json.Unmarshal(dataAsBytes, &data); err != nil {
 		str := fmt.Sprintf("JSON Parsing exception: %+v", err)
 		return shim.Error(str)
 	}
 
-	fmt.Println(fmt.Sprintf("Sucessfully tested %s", dataAsBytes))
+	if data.HomeOperatorRegion == args[1] {
+		if data.AtHome == false && data.IsRoaming == true {
+			return shim.Success([]byte("UnAuthorized!!"))
+		}
+		return shim.Success([]byte("Authorized"))
+	} else {
+		if data.AtHome == false && data.IsRoaming == true {
+			return shim.Success([]byte("Authorized!!"))
+		}
+		return shim.Success([]byte("UnAuthorized"))
+	}
+
+	fmt.Println(fmt.Sprintf("Sucessfully authenticated %s", dataAsBytes))
 	return shim.Success(dataAsBytes)
 }
 

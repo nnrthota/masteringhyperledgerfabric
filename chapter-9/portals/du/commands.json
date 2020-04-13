@@ -71,15 +71,15 @@ curl -s -X POST \
 
 {
   "msisdn": "8848284834",
-  "address": "Some where in the Andhra Pradesh, some PIN code",
+  "address": "Some where in the UAE",
   "atHome": true,
   "status":"in-force",
-  "Location": "Kadapa, Andhrapradesh",
-  "latitude":"86245826",
+  "Location": "Dubai, D3",
+  "latitude":"97186245826",
   "longitude": "24756247",
   "isRoaming":false,
   "HomeOperatorName":"du",
-  "HomeOperatorRegion":"Andhra Pradesh & Telangana",
+  "HomeOperatorRegion":"UAE",
   "RoamingOperatorName":"",
   "RoamingOperatorRegion":""
 }
@@ -95,7 +95,7 @@ curl -s -X POST \
   "fcn": "createSubscriber",
   "userName": "duClient",
   "orgName": "du",
-  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Kadapa, Andhrapradesh\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"du\",\r\n  \"HomeOperatorRegion\":\"Andhra Pradesh & Telangana\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
+  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the UAE\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Dubai, D3\",\r\n  \"latitude\":\"97186245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"du\",\r\n  \"HomeOperatorRegion\":\"UAE\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
 	"peers": ["du-peer"]
 }'
 
@@ -109,11 +109,13 @@ curl -s -X POST \
   "fcn": "toRoaming",
   "userName": "duClient",
   "orgName": "du",
-  "args": ["8848284834", "du", "UAE"],
+  "args": ["9718848284834", "airtel", "IN"],
 	"peers": ["du-peer"]
 }'
 
-//authenticate
+//authenticate : This should give result as UNAuthorized as user is in roaming and 
+// Fraud cloned the user identity and connected to IN to avail services 
+// Blockchain detected this behavioud instantly and mitigate the fraud!
 curl -s -X POST \
   http://localhost:7000/query \
   -H "content-type: application/json" \
@@ -125,6 +127,20 @@ curl -s -X POST \
   "orgName": "du",
   "args": ["8848284834", "UAE"],
 	"peers": ["du-peer"]
+}'
+
+//authenticate should give result as Authorized
+curl -s -X POST \
+  http://localhost:6000/query \
+  -H "content-type: application/json" \
+  -d '{
+  "channelName":"netchannel",
+  "chaincodeName":"csp",
+  "fcn": "authenticate",
+  "userName": "airtelClient",
+  "orgName": "airtel",
+  "args": ["8848284834", "IN"],
+	"peers": ["airtel-peer"]
 }'
 
 //query
