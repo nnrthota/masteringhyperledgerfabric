@@ -35,7 +35,7 @@ curl -s -X POST \
 
 
 
--- --Install and Instantiate chaincode-- -- - POLICY_CHECK
+-- --Install and Instantiate chaincode-- -- -
 
 //Install Chain code on netchannel Channel
 
@@ -71,15 +71,15 @@ curl -s -X POST \
 
 {
   "msisdn": "8848284834",
-  "address": "Some where in the UAE",
+  "address": "Some where in the Andhra Pradesh, some PIN code",
   "atHome": true,
   "status":"in-force",
-  "Location": "Dubai, D3",
-  "latitude":"97186245826",
+  "Location": "Kadapa, Andhrapradesh",
+  "latitude":"86245826",
   "longitude": "24756247",
   "isRoaming":false,
   "HomeOperatorName":"du",
-  "HomeOperatorRegion":"UAE",
+  "HomeOperatorRegion":"IN",
   "RoamingOperatorName":"",
   "RoamingOperatorRegion":""
 }
@@ -95,11 +95,11 @@ curl -s -X POST \
   "fcn": "createSubscriber",
   "userName": "duClient",
   "orgName": "du",
-  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the UAE\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Dubai, D3\",\r\n  \"latitude\":\"97186245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"du\",\r\n  \"HomeOperatorRegion\":\"UAE\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
+  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Kadapa, Andhrapradesh\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"du\",\r\n  \"HomeOperatorRegion\":\"IN\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
 	"peers": ["du-peer"]
 }'
 
-//change to roaming
+//change to roaming: Move user to UAE location
 curl -s -X POST \
   http://localhost:7000/invoke \
   -H "content-type: application/json" \
@@ -109,7 +109,7 @@ curl -s -X POST \
   "fcn": "toRoaming",
   "userName": "duClient",
   "orgName": "du",
-  "args": ["9718848284834", "airtel", "IN"],
+  "args": ["8848284834", "du", "UAE"],
 	"peers": ["du-peer"]
 }'
 
@@ -125,22 +125,22 @@ curl -s -X POST \
   "fcn": "authenticate",
   "userName": "duClient",
   "orgName": "du",
-  "args": ["8848284834", "UAE"],
+  "args": ["8848284834", "IN"],
 	"peers": ["du-peer"]
 }'
 
 //authenticate should give result as Authorized
 curl -s -X POST \
-  http://localhost:6000/query \
+  http://localhost:7000/query \
   -H "content-type: application/json" \
   -d '{
   "channelName":"netchannel",
   "chaincodeName":"csp",
   "fcn": "authenticate",
-  "userName": "airtelClient",
-  "orgName": "airtel",
-  "args": ["8848284834", "IN"],
-	"peers": ["airtel-peer"]
+  "userName": "duClient",
+  "orgName": "du",
+  "args": ["8848284834", "UAE"],
+	"peers": ["du-peer"]
 }'
 
 //query

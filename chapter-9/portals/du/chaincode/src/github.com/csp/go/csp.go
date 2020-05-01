@@ -152,7 +152,7 @@ func (s *SmartContract) authenticate(APIstub shim.ChaincodeStubInterface, args [
 		return shim.Error("This subscriber does not exists")
 	}
 	data := Subscriber{}
-
+	
 	if err := json.Unmarshal(dataAsBytes, &data); err != nil {
 		str := fmt.Sprintf("JSON Parsing exception: %+v", err)
 		return shim.Error(str)
