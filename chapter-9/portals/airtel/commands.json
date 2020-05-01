@@ -35,7 +35,7 @@ curl -s -X POST \
 
 
 
--- --Install and Instantiate chaincode-- -- - POLICY_CHECK
+-- --Install and Instantiate chaincode-- -- -
 
 //Install Chain code on netchannel Channel
 
@@ -79,7 +79,7 @@ curl -s -X POST \
   "longitude": "24756247",
   "isRoaming":false,
   "HomeOperatorName":"airtel",
-  "HomeOperatorRegion":"Andhra Pradesh & Telangana",
+  "HomeOperatorRegion":"IN",
   "RoamingOperatorName":"",
   "RoamingOperatorRegion":""
 }
@@ -95,7 +95,7 @@ curl -s -X POST \
   "fcn": "createSubscriber",
   "userName": "airtelClient",
   "orgName": "airtel",
-  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"IN\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"airtel\",\r\n  \"HomeOperatorRegion\":\"Andhra Pradesh & Telangana\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
+  "args": ["{\r\n  \"msisdn\": \"8848284834\",\r\n  \"address\": \"Some where in the Andhra Pradesh, some PIN code\",\r\n  \"atHome\": true,\r\n  \"status\":\"in-force\",\r\n  \"Location\": \"Kadapa, Andhrapradesh\",\r\n  \"latitude\":\"86245826\",\r\n  \"longitude\": \"24756247\",\r\n  \"isRoaming\":false,\r\n  \"HomeOperatorName\":\"airtel\",\r\n  \"HomeOperatorRegion\":\"IN\",\r\n  \"RoamingOperatorName\":\"\",\r\n  \"RoamingOperatorRegion\":\"\"\r\n}"],
 	"peers": ["airtel-peer"]
 }'
 
