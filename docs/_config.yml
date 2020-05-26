@@ -26,6 +26,8 @@ baseurl: "/masteringhyperledgerfabric" # the subpath of your site, e.g. /blog
 url: "https://narendranathreddythota.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: nnrthota
 
+google_adsense: ca-pub-4664487971575620
+
 # Build settings
 theme: minima
 plugins:
