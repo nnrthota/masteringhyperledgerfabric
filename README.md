@@ -4,6 +4,8 @@ Book: Mastering Hyperledger Fabric
 ## Master The Art of Hyperledger Fabric using docker-compose, docker swarm and kubernetes
 <img align="center" width="850" src="docs/images/bookcover.jpg">
 <hr>
+Buy Now: <a target="_blank" href="https://www.amazon.in/gp/product/B084KZP9M7/ref=as_li_tl?ie=UTF8&camp=3638&creative=24630&creativeASIN=B084KZP9M7&linkCode=as2&tag=nnrthota-21&linkId=387013b439762ddae904df0dcb10e465">Mastering Hyperledger Fabric: Master The Art of Hyperledger Fabric on Kubernetes</a><img src="//ir-in.amazon-adsystem.com/e/ir?t=nnrthota-21&l=am2&o=31&a=B084KZP9M7" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<hr>
 
 ***Key Features***
 <ul>
@@ -23,8 +25,6 @@ Book: Mastering Hyperledger Fabric
 <li>Logging consortium with ELK/EFK stack</li>
 <li>Some interesting open-source tools and some Bonus concepts
 </ul>
-
-<iframe align="right" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=IN&amp;source=ac&amp;ref=qf_sp_asin_til&amp;ad_type=product_link&amp;tracking_id=nnrthota-21&amp;marketplace=amazon&amp;region=IN&amp;placement=B084KZP9M7&amp;asins=B084KZP9M7&amp;linkId=5f273a45f1c4c81962e550d92733c45d&amp;show_border=true&amp;link_opens_in_new_window=true&amp;price_color=333333&amp;title_color=0066c0&amp;bg_color=ffffff"></iframe>
 
 ***Table of Contents***
 <ol>
