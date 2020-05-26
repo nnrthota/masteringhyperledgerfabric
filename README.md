@@ -24,8 +24,7 @@ Book: Mastering Hyperledger Fabric
 <li>Some interesting open-source tools and some Bonus concepts
 </ul>
 
-<iframe align="right"  style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=IN&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=nnrthota-21&marketplace=amazon&region=IN&placement=B084KZP9M7&asins=B084KZP9M7&linkId=5f273a45f1c4c81962e550d92733c45d&show_border=true&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
-    </iframe>
+<iframe align="right" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=IN&amp;source=ac&amp;ref=qf_sp_asin_til&amp;ad_type=product_link&amp;tracking_id=nnrthota-21&amp;marketplace=amazon&amp;region=IN&amp;placement=B084KZP9M7&amp;asins=B084KZP9M7&amp;linkId=5f273a45f1c4c81962e550d92733c45d&amp;show_border=true&amp;link_opens_in_new_window=true&amp;price_color=333333&amp;title_color=0066c0&amp;bg_color=ffffff"></iframe>
 
 ***Table of Contents***
 <ol>
