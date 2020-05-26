@@ -62,9 +62,13 @@ layout: home
 
 # Testimonials
 
-***United States of America:***
+## United States of America:
 <img align="center" width="850" src="./images/customer1.png">
 <hr>
-<br>
-***Internations (Europe):***
+
+## International (Europe):
 <img align="center" width="850" src="./images/customer2.png">
+<hr>
+
+## India:
+<img align="center" width="850" src="./images/customer3.png">

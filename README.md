@@ -51,3 +51,16 @@ Buy Now: <a target="_blank" href="https://www.amazon.in/gp/product/B084KZP9M7/re
 
 ***Book Description***
 <p>Mastering Hyperledger Fabric is a craving topic for all Hyperledger Fabric Developers around the world. Hyperledger Fabric is an open-source project that helps organizations create and maintain permissioned distributed Blockchain consortiums. This book is for readers who are looking for Hyperledger offerings to build end-to-end projects with growing complexity and functionalities. This book will be a one-stop solution for all developers who want to build blockchain consortiums using Hyperledger Fabric. Topics include TLS, Unix sockets, caliper(Benchmark tool), raft consensus, advanced chaincode development, key collision and MVCC, chaincode access controls, chaincode encryption, node.js SDK, golang SDK, docker daemon API, private data concepts, onboarding organizations using node.js SDK, deploy hyperledger fabric using Kubernetes, deploy hyperledger fabric using docker swarm, monitoring hyperledger fabric, monitoring Kubernetes, monitoring docker swarm, logging hyperledger fabric. After reading this book the reader will be able to set up Production grade hyperledger fabric consortium using raft consensus mechanisms with monitoring using Prometheus and grafana, even logging. This book explains so many key concepts of hyperledger fabric including 2.0 and written with three years of hyperledger fabric production experience.</p>
+
+# Testimonials
+
+## United States of America:
+<img align="center" width="850" src="./images/customer1.png">
+<hr>
+
+## International (Europe):
+<img align="center" width="850" src="./images/customer2.png">
+<hr>
+
+## India:
+<img align="center" width="850" src="./images/customer3.png">
