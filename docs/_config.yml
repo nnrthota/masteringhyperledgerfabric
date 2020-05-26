@@ -27,7 +27,7 @@ url: "https://narendranathreddythota.github.io" # the base hostname & protocol f
 twitter_username: nnrthota
 
 # Build settings
-theme: minima
+theme: jekyll-theme-slate
 plugins:
   - jekyll-feed
 
