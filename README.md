@@ -5,7 +5,6 @@ Book: Mastering Hyperledger Fabric
 <img align="center" width="850" src="docs/images/bookcover.jpg">
 <hr>
 Buy Now: <a target="_blank" href="https://www.amazon.in/gp/product/B084KZP9M7/ref=as_li_tl?ie=UTF8&camp=3638&creative=24630&creativeASIN=B084KZP9M7&linkCode=as2&tag=nnrthota-21&linkId=387013b439762ddae904df0dcb10e465">Mastering Hyperledger Fabric: Master The Art of Hyperledger Fabric on Kubernetes</a><img src="//ir-in.amazon-adsystem.com/e/ir?t=nnrthota-21&l=am2&o=31&a=B084KZP9M7" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-<hr>
 
 ***Key Features***
 <ul>
@@ -23,8 +22,9 @@ Buy Now: <a target="_blank" href="https://www.amazon.in/gp/product/B084KZP9M7/re
 <li>Monitor consortium with Prometheus and grafana</li>
 <li>Monitor docker and docker swarm using swarmpit and logspout</li>
 <li>Logging consortium with ELK/EFK stack</li>
-<li>Some interesting open-source tools and some Bonus concepts
+<li>Some interesting open-source tools and some Bonus concepts</li>
 </ul>
+
 
 ***Table of Contents***
 <ol>
