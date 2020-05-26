@@ -22,7 +22,7 @@ title: Mastering Hyperledger Fabric
 email: nnrthota@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
     Master The Art of Hyperledger Fabric using docker-compose, docker swarm and Kubernetes Container Orchestrator
-baseurl: "masteringhyperledgerfabric" # the subpath of your site, e.g. /blog
+baseurl: "/masteringhyperledgerfabric" # the subpath of your site, e.g. /blog
 url: "https://narendranathreddythota.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: nnrthota
 
