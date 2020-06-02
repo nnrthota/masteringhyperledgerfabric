@@ -71,6 +71,9 @@ layout: home
 <hr>
 
 ## India:
+<img align="center" width="850" src="./images/srinivas.png">
+
+## India:
 <img align="center" width="850" src="./images/customer3.png">
 
 ## India:
