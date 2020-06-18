@@ -55,12 +55,12 @@ Buy Now: <a target="_blank" href="https://www.amazon.in/gp/product/B084KZP9M7/re
 # Testimonials
 
 ## United States of America:
-<img align="center" width="850" src="./images/customer1.png">
+<img align="center" width="850" src="./docs/images/customer1.png">
 <hr>
 
 ## International (Europe):
-<img align="center" width="850" src="./images/customer2.png">
+<img align="center" width="850" src="./docs/images/customer2.png">
 <hr>
 
 ## India:
-<img align="center" width="850" src="./images/customer3.png">
+<img align="center" width="850" src="./docs/images/customer3.png">
