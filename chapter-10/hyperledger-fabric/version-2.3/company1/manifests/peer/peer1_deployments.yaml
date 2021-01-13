@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company1-peer-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comp1-peer
+  template:
+    metadata:
+      labels:
+        app: comp1-peer
+        tier: backend
+        track: stable
+    spec:
+      #nodeSelector:
+        #id: peer
+      containers:
+      - name: peer1
+        image: "hyperledger/fabric-peer:2.3.0"
+        ports:
+          - name: peer1-port
+            containerPort: 7051
+          - name: peer1-chaincode
+            containerPort: 7052
+          - name: peer1-event
+            containerPort: 7053
+        workingDir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+        command: ["peer"]
+        args: ["node","start"]
+        env:
+          - name: CORE_VM_ENDPOINT
+            value: "unix:///host/var/run/docker.sock"
+          - name: CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE
+            value: "bridge"
+          - name: GODEBUG
+            value: "netdns=go"
+          - name: CORE_PEER_ADDRESSAUTODETECT
+            value: "true"
+          - name: CORE_PEER_ID
+            value: "company1-peer"
+          - name: CORE_CHAINCODE_BUILDER
+            value: "hyperledger/fabric-ccenv:1.4.8"
+          - name: CORE_PEER_ADDRESS
+            value: "company1-peer:30051"
+          - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
+            value: "company1-peer:30051"
+          - name: CORE_PEER_CHAINCODELISTENADDRESS
+            value: "0.0.0.0:7052"
+          - name: CORE_PEER_GOSSIP_BOOTSTRAP
+            value: "company1-peer:30051"
+          - name: CORE_PEER_LISTENADDRESS
+            value: "0.0.0.0:7051"
+          - name: CORE_PEER_EVENTS_ADDRESS
+            value: "0.0.0.0:7053"
+          - name: CORE_PEER_LOCALMSPID
+            value: "company1MSP"
+          - name: CORE_LOGGING_GOSSIP
+            value: "INFO"
+          - name: CORE_LOGGING_PEER_GOSSIP
+            value: "INFO"
+          - name: CORE_LOGGING_MSP
+            value: "INFO"
+          - name: CORE_LOGGING_POLICIES
+            value: "DEBUG"
+          - name: CORE_LOGGING_CAUTHDSL
+            value: "DEBUG"
+          - name: CORE_PEER_GOSSIP_USELEADERELECTION
+            value: "true"
+          - name: CORE_PEER_GOSSIP_ORGLEADER
+            value: "false"
+          - name: CORE_PEER_GOSSIP_ORGLEADER
+            value: "false"
+         # The following setting skips the gossip handshake since we are
+         # are not doing mutual TLS
+          - name: CORE_PEER_MSPCONFIGPATH
+            value: "/etc/hyperledger/crypto/peer/msp"
+          - name: CORE_PEER_TLS_ENABLED
+            value: "true"
+          - name: CORE_PEER_TLS_KEY_FILE
+            value: "/etc/hyperledger/crypto/peer/tls/server.key"
+          - name: CORE_PEER_TLS_CERT_FILE
+            value: "/etc/hyperledger/crypto/peer/tls/server.crt"
+          - name: CORE_PEER_TLS_ROOTCERT_FILE
+            value: "/etc/hyperledger/crypto/peer/tls/ca.crt"
+          # -- About Couch --
+          - name: CORE_LEDGER_STATE_STATEDATABASE
+            value: "CouchDB"
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS
+            value: "couchdb1:5984"
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME
+            value: ""
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+            value: ""
+          - name: CORE_VM_DOCKER_ATTACHSTDOUT
+            value: "true"
+        volumeMounts:
+          - name: host
+            mountPath: /host/var/run/
+          - name: config-admin
+            mountPath: /etc/hyperledger/crypto/peer/msp/admincerts/
+          - name: config-cacerts
+            mountPath: /etc/hyperledger/crypto/peer/msp/cacerts/
+          - name: config-keystore
+            mountPath: /etc/hyperledger/crypto/peer/msp/keystore/
+          - name: config-signcerts
+            mountPath: /etc/hyperledger/crypto/peer/msp/signcerts/
+          - name: config-tlscacerts
+            mountPath: /etc/hyperledger/crypto/peer/msp/tlscacerts/
+          - name: config-tls
+            mountPath: /etc/hyperledger/crypto/peer/tls/
+
+      volumes:
+        - name: host
+          hostPath:
+            path: /var/run
+        - name: config-admin
+          configMap:
+            name: company1-admin
+        - name: config-cacerts
+          configMap:
+            name: company1-cacrt
+        - name: config-keystore
+          secret:
+           secretName: comp1-peer-key
+        - name: config-signcerts
+          configMap:
+           name: comp1-peer-crt
+        - name: config-tlscacerts
+          configMap:
+           name: company1-tlsca
+        - name: config-tls
+          secret:
+           secretName: comp1-peer-tls

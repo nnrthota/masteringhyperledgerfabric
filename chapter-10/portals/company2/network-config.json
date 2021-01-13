@@ -4,7 +4,7 @@
 	"description": "sc-company2-admin-portal",
 	"version": "1.0",
 	"channels": {
-		"netchannel": {
+		"transportchannel": {
 			"orderers": [
 				"orderer1",
 				"orderer2",

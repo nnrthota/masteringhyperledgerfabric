@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+   name: ca-company2
+spec:
+ selector:
+   app: ca-company2
+   tier: identity
+ type: NodePort
+ ports:
+   - name: endpoint
+     protocol: TCP
+     port: 7054
+     targetPort: 7054
+     nodePort: 30064

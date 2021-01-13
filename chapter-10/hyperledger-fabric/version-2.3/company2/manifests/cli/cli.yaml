@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comp2-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comp2-cli
+  template:
+    metadata:
+      labels:
+       app: comp2-cli
+       tier: cli
+    spec:
+     containers:
+       - name: cli
+         image: hyperledger/fabric-tools:2.3.0
+         tty: true
+         env: 
+         - name:  GOPATH
+           value: /opt/gopath
+         - name:  FABRIC_LOGGING_SPEC
+           value: INFO
+         - name:  CORE_PEER_ADDRESS
+           value: company2-peer:30061
+         - name:  CORE_PEER_LOCALMSPID
+           value: company2MSP
+         - name:  CORE_PEER_TLS_ENABLED
+           value: "true"
+         - name: CORE_PEER_MSPCONFIGPATH
+           value: "/etc/hyperledger/crypto/peer/msp"
+         - name: CORE_PEER_TLS_ENABLED
+           value: "true"
+         - name: CORE_PEER_TLS_KEY_FILE
+           value: "/etc/hyperledger/crypto/peer/tls/server.key"
+         - name: CORE_PEER_TLS_CERT_FILE
+           value: "/etc/hyperledger/crypto/peer/tls/server.crt"
+         - name: CORE_PEER_TLS_ROOTCERT_FILE
+           value: "/etc/hyperledger/crypto/peer/tls/ca.crt"
+         volumeMounts:
+            - name: host
+              mountPath: /host/var/run/
+            - name: config-admin
+              mountPath: /etc/hyperledger/crypto/peer/msp/admincerts/
+            - name: config-cacerts
+              mountPath: /etc/hyperledger/crypto/peer/msp/cacerts/
+            - name: config-keystore
+              mountPath: /etc/hyperledger/crypto/peer/msp/keystore/
+            - name: config-signcerts
+              mountPath: /etc/hyperledger/crypto/peer/msp/signcerts/
+            - name: config-tlscacerts
+              mountPath: /etc/hyperledger/crypto/peer/msp/tlscacerts/
+            - name: config-tls
+              mountPath: /etc/hyperledger/crypto/peer/tls/
+            - name: config-ordr-tls
+              mountPath: /etc/hyperledger/crypto/orderer/tls/
+            - name: chaincode
+              mountPath: /opt/gopath/src/github.com/chaincode/
+            - name: channel-tx
+              mountPath: /etc/hyperledger/configtx/channel
+     volumes:
+       - name: host
+         hostPath:
+             path: /var/run
+       - name: config-admin
+         configMap:
+            name: comp2-admin
+       - name: config-cacerts
+         configMap:
+            name: comp2-cacrt
+       - name: config-keystore
+         secret:
+            secretName: comp2-admin-key
+       - name: config-signcerts
+         configMap:
+            name: comp2-admin-crt
+       - name: chaincode
+         configMap:
+            name: comp2-chaincode
+       - name: config-tlscacerts
+         configMap:
+            name: comp2-tlsca
+       - name: channel-tx
+         configMap:
+            name: comp2-channel-tx
+       - name: config-tls
+         secret:
+             secretName: comp2-peer-tls
+       - name: config-ordr-tls
+         configMap:
+             name: company1-tlsca

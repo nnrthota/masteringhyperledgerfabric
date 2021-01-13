@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couchdb1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couchdb1
+  template:
+    metadata:
+      labels:
+        app: couchdb1
+        tier: database
+        track: stable
+    spec:
+      #nodeSelector:
+        #id: peer
+      containers:
+        - name: couchdb1
+          image: "hyperledger/fabric-couchdb:0.4.21"
+          env:
+            - name: COUCHDB_USER
+              value: ""
+            - name: COUCHDB_PASSWORD
+              value: ""
+          ports:
+            - name: couchdb1-port
+              containerPort: 5984

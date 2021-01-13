@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderer1
+  template:
+    metadata:
+      labels:
+        app: orderer1
+        tier: backend
+        track: stable
+    spec:
+      #nodeSelector:
+        #id: orderer
+      containers:
+        - name: orderer1
+          image: "hyperledger/fabric-orderer:2.3.0"
+          ports:
+            - name: orderer-port
+              containerPort: 7050
+          workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+          command: ["orderer"]
+          env:
+            - name: ORDERER_HOST
+              value: "orderer1"
+            - name: ORDERER_GENERAL_LOGLEVEL
+              value: "debug"
+            - name: ORDERER_GENERAL_LISTENADDRESS
+              value: "0.0.0.0"
+            - name: ORDERER_GENERAL_LISTENPORT
+              value: "7050"
+            - name: ORDERER_GENERAL_GENESISMETHOD
+              value: "file"
+            - name: ORDERER_GENERAL_GENESISFILE
+              value: "/etc/hyperledger/crypto/orderer/genesis.block"
+            - name: ORDERER_GENERAL_LOCALMSPID
+              value: "company1MSP"
+            - name: GODEBUG
+              value: netdns=go
+            - name: ORDERER_GENERAL_LOCALMSPDIR
+              value: "/etc/hyperledger/crypto/orderer/msp"
+            - name: ORDERER_GENERAL_TLS_ENABLED
+              value: "true"
+            - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+              value: "/etc/hyperledger/crypto/orderer/tls/server.key"
+            - name: ORDERER_GENERAL_TLS_CERTIFICATE
+              value: "/etc/hyperledger/crypto/orderer/tls/server.crt"
+            - name: ORDERER_GENERAL_TLS_ROOTCAS
+              value: "[/etc/hyperledger/crypto/orderer/tls/ca.crt]"
+            - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+              value: "/etc/hyperledger/crypto/orderer/tls/server.key"
+            - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+              value: "/etc/hyperledger/crypto/orderer/tls/server.crt"
+            - name: ORDERER_GENERAL_CLUSTER_ROOTCAS
+              value: "[/etc/hyperledger/crypto/orderer/tls/ca.crt]"
+          volumeMounts:
+            - name: config-genesis
+              mountPath: /etc/hyperledger/crypto/orderer/
+            - name: config-admin
+              mountPath: /etc/hyperledger/crypto/orderer/msp/admincerts/
+            - name: config-cacerts
+              mountPath: /etc/hyperledger/crypto/orderer/msp/cacerts/
+            - name: config-keystore
+              mountPath: /etc/hyperledger/crypto/orderer/msp/keystore/
+            - name: config-signcerts
+              mountPath: /etc/hyperledger/crypto/orderer/msp/signcerts/
+            - name: config-tlscacerts
+              mountPath: /etc/hyperledger/crypto/orderer/msp/tlscacerts/
+            - name: config-tls
+              mountPath: /etc/hyperledger/crypto/orderer/tls/
+
+      volumes:
+      - name: config-genesis
+        configMap:
+         name: genesis
+      - name: config-admin
+        configMap:
+         name: company1-admin
+      - name: config-cacerts
+        configMap:
+         name: company1-cacrt
+      - name: config-keystore
+        secret:
+         secretName: comp1-ordr1-key
+      - name: config-signcerts
+        configMap:
+         name: comp1-ordr1-crt
+      - name: config-tlscacerts
+        configMap:
+         name: company1-tlsca
+      - name: config-tls
+        secret:
+         secretName: comp1-ordr1-tls
