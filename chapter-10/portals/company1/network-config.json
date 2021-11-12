@@ -42,7 +42,7 @@
 	},
 	"orderers": {
 		"orderer1": {
-			"url": "grpcs://192.168.64.17:30050",
+			"url": "grpcs://192.168.64.20:30050",
 			"grpcOptions": {
 				"ssl-target-name-override": "orderer1",
 				"grpc.max_receive_message_length": -1,
@@ -58,7 +58,7 @@
 			}
 		},
 		"orderer2": {
-			"url": "grpcs://192.168.64.17:30060",
+			"url": "grpcs://192.168.64.20:30060",
 			"grpcOptions": {
 				"ssl-target-name-override": "orderer2",
 				"grpc.max_receive_message_length": -1,
@@ -74,7 +74,7 @@
 			}
 		},
 		"orderer3": {
-			"url": "grpcs://192.168.64.17:30070",
+			"url": "grpcs://192.168.64.20:30070",
 			"grpcOptions": {
 				"ssl-target-name-override": "orderer3",
 				"grpc.max_receive_message_length": -1,
@@ -92,8 +92,8 @@
 	},
 	"peers": {
 		"company1-peer": {
-			"url": "grpcs://192.168.64.17:30051",
-			"eventUrl": "grpcs://192.168.64.17:30053",
+			"url": "grpcs://192.168.64.20:30051",
+			"eventUrl": "grpcs://192.168.64.20:30053",
 			"grpcOptions": {
 				"ssl-target-name-override": "company1-peer",
 				"grpc.max_receive_message_length": -1,
@@ -111,7 +111,7 @@
 	},
 	"certificateAuthorities": {
 		"ca-company1": {
-			"url": "https://192.168.64.17:30054",
+			"url": "https://192.168.64.20:30054",
 			"httpOptions": {
 				"verify": false
 			},

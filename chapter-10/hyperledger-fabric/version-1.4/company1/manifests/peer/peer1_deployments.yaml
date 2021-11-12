@@ -58,6 +58,8 @@ spec:
             value: "INFO"
           - name: CORE_LOGGING_PEER_GOSSIP
             value: "INFO"
+          - name: CORE_CHAINCODE_BUILDER
+            value: "hyperledger/fabric-ccenv:1.4.6"
           - name: CORE_LOGGING_MSP
             value: "INFO"
           - name: CORE_LOGGING_POLICIES

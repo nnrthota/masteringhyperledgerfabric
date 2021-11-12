@@ -128,6 +128,7 @@ func (s *SmartContract) createShipment(APIstub shim.ChaincodeStubInterface, args
 		str := fmt.Sprintf("Problem occured while saving the information")
 		return shim.Error(str)
 	}
+	APIstub.SetEvent("shipment_created", dataAsBytes)
 	fmt.Println(fmt.Sprintf("Sucessfully created %s", dataAsBytes))
 	return shim.Success(dataAsBytes)
 }

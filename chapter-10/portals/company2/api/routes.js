@@ -19,13 +19,13 @@ var logger = helper.getLogger("Routes");
 function getErrorMessage(field) {
   var response = {
     success: false,
-    message: field + " field is missing or Invalid in the request"
+    message: field + " field is missing or Invalid in the request",
   };
   return response;
 }
 
 // Register and enroll user
-router.post("/createUser", async function(req, res) {
+router.post("/createUser", async function (req, res) {
   var username = req.body.username;
   var orgName = req.body.orgName;
   logger.debug("End point : /users");
@@ -61,7 +61,7 @@ router.post("/createUser", async function(req, res) {
     );
     res.json({
       success: false,
-      message: response
+      message: response,
     });
   }
 });
@@ -71,7 +71,7 @@ router.post("/createUser", async function(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 // Create Channel
-router.post("/createChannel", async function(req, res) {
+router.post("/createChannel", async function (req, res) {
   logger.info("<<<<<<<<<<<<<<<<< C R E A T E  C H A N N E L >>>>>>>>>>>>>>>>>");
   logger.debug("End point : /channels");
   var channelName = req.body.channelName;
@@ -99,7 +99,7 @@ router.post("/createChannel", async function(req, res) {
   res.send(message);
 });
 // Join Channel
-router.post("/joinPeers", async function(req, res) {
+router.post("/joinPeers", async function (req, res) {
   logger.info("<<<<<<<<<<<<<<<<< J O I N  C H A N N E L >>>>>>>>>>>>>>>>>");
   logger.debug("End point : /joinPeers");
   var channelName = req.body.channelName;
@@ -121,13 +121,13 @@ router.post("/joinPeers", async function(req, res) {
   }
 
   let message = await join.joinChannel(channelName, peers, userName, orgName);
-  const timeout = ms => new Promise(res => setTimeout(res, ms));
+  const timeout = (ms) => new Promise((res) => setTimeout(res, ms));
   await timeout(1000);
   res.send(message);
 });
 
 // Install chaincode on target peers
-router.post("/installChaincode", async function(req, res) {
+router.post("/installChaincode", async function (req, res) {
   logger.debug("==================== INSTALL CHAINCODE ==================");
   var peers = req.body.peers;
   var chaincodeName = req.body.chaincodeName;
@@ -174,7 +174,7 @@ router.post("/installChaincode", async function(req, res) {
 });
 
 // Instantiate chaincode on target peers
-router.post("/instantiateChaincode", async function(req, res) {
+router.post("/instantiateChaincode", async function (req, res) {
   logger.debug("==================== INSTANTIATE CHAINCODE ==================");
   var peers = req.body.peers;
   var chaincodeName = req.body.chaincodeName;
@@ -227,7 +227,7 @@ router.post("/instantiateChaincode", async function(req, res) {
   res.send(message);
 });
 
-router.get("/query", async function(req, res) {
+router.post("/query", async function (req, res) {
   logger.debug("==================== QUERY ON CHAINCODE ==================");
   var chaincodeName = req.body.chaincodeName;
   var channelName = req.body.channelName;
@@ -264,10 +264,10 @@ router.get("/query", async function(req, res) {
     userName,
     orgName
   );
-  message = JSON.parse(message)
+  message = JSON.parse(message);
   res.send(message);
 });
-router.post("/invoke", async function(req, res) {
+router.post("/invoke", async function (req, res) {
   logger.debug("==================== INVOKE ON CHAINCODE ==================");
   var chaincodeName = req.body.chaincodeName;
   var channelName = req.body.channelName;

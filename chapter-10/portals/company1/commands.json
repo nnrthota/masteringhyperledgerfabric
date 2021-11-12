@@ -89,7 +89,7 @@ curl -s -X POST \
   -H "content-type: application/json" \
   -d '{
   "channelName":"transportchannel",
-  "chaincodeName":"shipment",
+  "chaincodeName":"shipment1",
   "fcn": "createShipment",
   "userName": "company1Client",
   "orgName": "company1",
